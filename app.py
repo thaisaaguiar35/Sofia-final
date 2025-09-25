@@ -42,4 +42,3 @@ else:
     if st.sidebar.button("Sair", key="botao_sair"):
         st.session_state.clear()
         st.rerun()
-
