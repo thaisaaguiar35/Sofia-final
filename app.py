@@ -40,5 +40,6 @@ else:
         documentos.show()
 
     if st.sidebar.button("Sair", key="botao_sair"):
-        st.session_state.clear()
-        st.rerun()
+    st.session_state.clear()  # limpa tudo da sessão
+    st.rerun()  # recarrega a página do zero
+
