@@ -19,8 +19,9 @@ def login():
         conn.close()
 
         if usuario:
-            st.session_state["usuario"] = usuario[1]
+            st.session_state["usuario"] = usuario[1]  # considera que o campo nome é índice 1
             st.success(f"Bem-vindo, {usuario[1]}! ✅")
+            st.experimental_rerun()
         else:
             st.error("Email ou senha incorretos ❌")
 
