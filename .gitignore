@@ -1,0 +1,10 @@
+# Ignorar ambientes virtuais
+.venv/
+sofia-env/
+
+# Ignorar arquivos compilados Python
+*.pyc
+__pycache__/
+
+# Ignorar bancos de dados
+*.db
