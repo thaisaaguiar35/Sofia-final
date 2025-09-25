@@ -1,18 +1,21 @@
-import streamlit as st
-from controllers.estudante_controller import adicionar_estudante, listar_estudantes
+def cadastro():
+    st.subheader("📝 Cadastro")
 
-def show():
-    st.title("📚 Cadastro de Estudantes")
-    
-    with st.form("cadastro_form"):
-        nome = st.text_input("Nome")
-        submitted = st.form_submit_button("Cadastrar")
+    nome = st.text_input("Nome", key="cadastro_nome")
+    email = st.text_input("Email", key="cadastro_email")
+    senha = st.text_input("Senha", type="password", key="cadastro_senha")
 
-        if submitted:
-            adicionar_estudante(nome)
-            st.success("✅ Estudante cadastrado com sucesso!")
-    
-    st.subheader("Lista de Estudantes")
-    estudantes = listar_estudantes()
-    for e in estudantes:
-        st.write(f"👤 {e.nome}")
+    if st.button("Cadastrar", key="cadastro_btn_cadastrar"):
+        conn = sqlite3.connect("sofia.db")
+        c = conn.cursor()
+        try:
+            c.execute(
+                "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)",
+                (nome, email, hash_senha(senha))
+            )
+            conn.commit()
+            st.success("Cadastro realizado com sucesso! 🎉 Agora faça login.")
+        except sqlite3.IntegrityError:
+            st.error("Email já cadastrado ❌")
+        finally:
+            conn.close()
