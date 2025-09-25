@@ -13,4 +13,5 @@ def show():
 
     st.dataframe(df, use_container_width=True)
 
-    st.bar_chart(df.set_index("Categoria"), key="chart_dashboard")
+    # Removi o key porque st.bar_chart não aceita esse argumento
+    st.bar_chart(df.set_index("Categoria"))
