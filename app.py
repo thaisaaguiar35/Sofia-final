@@ -19,7 +19,8 @@ st.markdown(
 usuario = st.session_state.get("usuario")
 
 if not usuario:
-    aba = st.radio("Acesso", ["Login", "Cadastro"])
+    # Adicione uma key para evitar conflito ao alternar login/cadastro
+    aba = st.radio("Acesso", ["Login", "Cadastro"], key="aba_acesso")
     if aba == "Login":
         login.login()
     else:
@@ -27,7 +28,13 @@ if not usuario:
 else:
     # Menu lateral só aparece depois do login
     st.sidebar.title(f"👤 Olá, {usuario}")
-    opcao = st.sidebar.radio("Navegação", ["Dashboard", "Conteúdo", "Documentos"])
+
+    # Key exclusiva para o menu lateral
+    opcao = st.sidebar.radio(
+        "Navegação",
+        ["Dashboard", "Conteúdo", "Documentos"],
+        key="menu_lateral"
+    )
 
     if opcao == "Conteúdo":
         conteudo.show()
@@ -36,6 +43,7 @@ else:
     elif opcao == "Documentos":
         documentos.show()
 
-    if st.sidebar.button("Sair"):
+    # Key também no botão para evitar duplicidade
+    if st.sidebar.button("Sair", key="botao_sair"):
         del st.session_state["usuario"]
         st.experimental_rerun()  # força recarregar a página após logout
