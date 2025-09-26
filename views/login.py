@@ -1,4 +1,4 @@
-iimport streamlit as st
+import streamlit as st
 import sqlite3
 import hashlib
 
@@ -7,6 +7,8 @@ def hash_senha(senha):
 
 def login():
     st.subheader("🔐 Login")
+    ...
+
 
     email = st.text_input("Email", key="login_email")
     senha = st.text_input("Senha", type="password", key="login_senha")

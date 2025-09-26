@@ -6,16 +6,17 @@ from views import conteudo, dashboard, documentos, login
 # Inicializa banco
 init_db()
 
-# Debug do banco
+# Debug: mostra caminho do DB (opcional)
 st.write("Caminho do banco de dados:", os.path.abspath("sofia.db"))
 
 # Título
 st.markdown("<h1 style='color: purple;'>🥷 SofIA</h1>", unsafe_allow_html=True)
 
-# Controle de sessão
+# Verifica usuário na sessão
 usuario = st.session_state.get("usuario")
 
 if not usuario:
+    # Acesso: Login ou Cadastro
     aba = st.radio("Acesso", ["Login", "Cadastro"], key="aba_acesso")
 
     if aba == "Login":
@@ -24,6 +25,7 @@ if not usuario:
         login.cadastro()
 
 else:
+    # Menu após login
     st.sidebar.title(f"👤 Olá, {usuario}")
 
     opcao = st.sidebar.radio(
@@ -39,7 +41,9 @@ else:
     elif opcao == "Documentos":
         documentos.show()
 
+        # Logout seguro
     if st.sidebar.button("Sair", key="botao_sair"):
-    st.session_state.clear()  # limpa tudo da sessão
-    st.rerun()  # recarrega a página do zero
+        st.session_state.clear()
+        st.rerun()
+
 
