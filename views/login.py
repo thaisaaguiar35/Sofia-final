@@ -2,13 +2,13 @@ import streamlit as st
 import sqlite3
 import hashlib
 
-def hash_senha(senha):
+def hash_senha(senha: str) -> str:
+    """Retorna o hash da senha com SHA256"""
     return hashlib.sha256(senha.encode()).hexdigest()
+
 
 def login():
     st.subheader("🔐 Login")
-    ...
-
 
     email = st.text_input("Email", key="login_email")
     senha = st.text_input("Senha", type="password", key="login_senha")
@@ -21,11 +21,12 @@ def login():
         conn.close()
 
         if usuario:
-            st.session_state["usuario"] = usuario[1]  # nome do usuário
+            st.session_state["usuario"] = usuario[1]  # Nome do usuário
             st.success(f"Bem-vindo, {usuario[1]}! ✅")
-            st.rerun()  # <<< atualizado
+            st.rerun()  # Recarrega a aplicação
         else:
             st.error("Email ou senha incorretos ❌")
+
 
 def cadastro():
     st.subheader("📝 Cadastro")
