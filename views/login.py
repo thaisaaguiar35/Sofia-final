@@ -1,6 +1,5 @@
 import streamlit as st
 import sqlite3
-import bcrypt
 from utils.db import DB_PATH
 
 def get_conn():
