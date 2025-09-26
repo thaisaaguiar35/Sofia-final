@@ -14,6 +14,9 @@ def login():
     senha = st.text_input("Senha", type="password", key="login_senha")
 
     if st.button("Entrar", key="btn_login"):
+        ...
+
+    if st.button("Entrar", key="btn_login"):
         conn = sqlite3.connect("sofia.db")
         c = conn.cursor()
         c.execute("SELECT * FROM usuarios WHERE email=? AND senha=?", (email, hash_senha(senha)))
@@ -36,9 +39,8 @@ def cadastro():
     senha = st.text_input("Senha", type="password", key="cadastro_senha")
 
     if st.button("Cadastrar", key="btn_cadastrar"):
-        conn = sqlite3.connect("sofia.db")
-        c = conn.cursor()
-        try:
+        ...
+
             c.execute(
                 "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)",
                 (nome, email, hash_senha(senha))
