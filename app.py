@@ -1,4 +1,3 @@
-import bcrypt
 import streamlit as st
 from utils.db import init_db
 from views import conteudo, dashboard, documentos, login
