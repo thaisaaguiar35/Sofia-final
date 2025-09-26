@@ -18,12 +18,11 @@ usuario = st.session_state.get("usuario")
 if not usuario:
     # Acesso: Login ou Cadastro
     aba = st.radio("Acesso", ["Login", "Cadastro"], key="aba_acesso")
-
+    
     if aba == "Login":
         login.login()
     else:
         login.cadastro()
-
 else:
     # Menu após login
     st.sidebar.title(f"👤 Olá, {usuario}")
@@ -34,16 +33,15 @@ else:
         key="menu_lateral"
     )
 
-    if opcao == "Conteúdo":
-        conteudo.show()
-    elif opcao == "Dashboard":
+    # Renderiza a página selecionada
+    if opcao == "Dashboard":
         dashboard.show()
+    elif opcao == "Conteúdo":
+        conteudo.show()
     elif opcao == "Documentos":
         documentos.show()
 
-        # Logout seguro
+    # Logout seguro sempre visível
     if st.sidebar.button("Sair", key="botao_sair"):
         st.session_state.clear()
-        st.rerun()
-
-
+        st.experimental_rerun()

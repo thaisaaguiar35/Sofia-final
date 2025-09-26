@@ -57,19 +57,4 @@ def show():
             )
             .properties(height=300)
         )
-        st.altair_chart(chart_notas, use_container_width=True)
-
-        st.write("### 📊 Frequência por Aluno")
-        chart_freq = (
-            alt.Chart(df_filtrado)
-            .mark_bar(color="#F58518")
-            .encode(
-                x=alt.X("Nome:N", sort=None, title="Aluno"),
-                y=alt.Y("Frequência:Q", title="Frequência (%)"),
-                tooltip=["Nome", "Nota", "Frequência"]
-            )
-            .properties(height=300)
-        )
-        st.altair_chart(chart_freq, use_container_width=True)
-    else:
-        st.info("⚠️ Sem resultados com esses filtros.")
+        st.altair_chart(chart_
