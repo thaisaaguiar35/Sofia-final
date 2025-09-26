@@ -1,47 +1,65 @@
 import streamlit as st
 import sqlite3
-import hashlib
+import bcrypt
+from utils.db import DB_PATH
 
-def hash_senha(senha: str) -> str:
-    """Retorna o hash da senha com SHA256"""
-    return hashlib.sha256(senha.encode()).hexdigest()
-
+def get_conn():
+    return sqlite3.connect(DB_PATH)
 
 def login():
-    st.subheader("🔐 Login")
-
+    st.subheader("🔑 Login")
     email = st.text_input("Email", key="login_email")
     senha = st.text_input("Senha", type="password", key="login_senha")
 
-    if st.button("Entrar", key="btn_login"):
-        ...
+    if st.button("Entrar", key="login_btn"):
+        if not email or not senha:
+            st.warning("Preencha email e senha.")
+            return
 
-    if st.button("Entrar", key="btn_login"):
-        conn = sqlite3.connect("sofia.db")
+        conn = get_conn()
         c = conn.cursor()
-        c.execute("SELECT * FROM usuarios WHERE email=? AND senha=?", (email, hash_senha(senha)))
-        usuario = c.fetchone()
+        c.execute("SELECT nome, senha FROM usuarios WHERE email = ?", (email.strip(),))
+        user = c.fetchone()
         conn.close()
 
-        if usuario:
-            st.session_state["usuario"] = usuario[1]  # Nome do usuário
-            st.success(f"Bem-vindo, {usuario[1]}! ✅")
-            st.rerun()  # Recarrega a aplicação
+        if user:
+            stored_hash = user[1]
+            try:
+                if bcrypt.checkpw(senha.encode("utf-8"), stored_hash.encode("utf-8")):
+                    st.success(f"Bem-vindo, {user[0]}!")
+                    st.session_state["usuario"] = user[0]
+                    st.experimental_rerun()
+                else:
+                    st.error("Senha incorreta.")
+            except ValueError:
+                st.error("Senha em formato inválido, recadastre-se.")
         else:
-            st.error("Email ou senha incorretos ❌")
-
+            st.error("Email não cadastrado.")
 
 def cadastro():
     st.subheader("📝 Cadastro")
-
     nome = st.text_input("Nome", key="cadastro_nome")
     email = st.text_input("Email", key="cadastro_email")
     senha = st.text_input("Senha", type="password", key="cadastro_senha")
 
-def cadastrar_usuario():
-    conn = sqlite3.connect("sofia.db")
-    c = conn.cursor()
-    c.execute("INSERT INTO tabela VALUES (?, ?)", (nome, email))
-    conn.commit()
-    conn.close()
+    if st.button("Cadastrar", key="cadastro_btn"):
+        if not nome or not email or not senha:
+            st.warning("Preencha todos os campos.")
+            return
 
+        conn = get_conn()
+        c = conn.cursor()
+        try:
+            hashed = bcrypt.hashpw(senha.encode("utf-8"), bcrypt.gensalt())
+            c.execute(
+                "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)",
+                (nome.strip(), email.strip(), hashed.decode("utf-8"))
+            )
+            conn.commit()
+            st.success("Usuário cadastrado com sucesso!")
+            st.session_state["usuario"] = nome.strip()
+            st.experimental_rerun()
+        except sqlite3.IntegrityError:
+            st.error("Este email já está cadastrado.")
+        finally:
+            conn.close()
