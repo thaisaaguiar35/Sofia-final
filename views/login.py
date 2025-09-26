@@ -1,5 +1,4 @@
 import streamlit as st
-import bcrypt
 from utils.db import get_user_by_email, save_user  # Assumindo que você tenha funções para DB
 
 def cadastro():
